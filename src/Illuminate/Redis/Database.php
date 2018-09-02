@@ -37,9 +37,14 @@ class Database {
 	 */
 	protected function createAggregateClient(array $servers)
 	{
+		$cluster = $servers['cluster'];
 		$servers = array_except($servers, array('cluster'));
-
-		return array('default' => new Client(array_values($servers)));
+		if ('redis' == $cluster) {
+			return array('default' => new Client(array_values($servers), ['cluster' => 'redis']));
+		}
+		else {
+			return array('default' => new Client(array_values($servers)));
+		}
 	}
 
 	/**
